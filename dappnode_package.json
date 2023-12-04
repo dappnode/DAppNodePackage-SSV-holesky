@@ -1,7 +1,7 @@
 {
   "name": "ssv-prater.dnp.dappnode.eth",
-  "version": "1.0.1",
-  "upstreamVersion": "v1.0.0-rc.1",
+  "version": "1.0.2",
+  "upstreamVersion": "v1.2.0",
   "upstreamRepo": "bloxapp/ssv",
   "upstreamArg": "UPSTREAM_VERSION",
   "architectures": ["linux/amd64"],
