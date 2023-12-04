@@ -1,22 +1,18 @@
 [
-    {
-        "labels": {
-            "package": "ssv-prater.dnp.dappnode.eth",
-            "service": "ssv.ssv-prater.dappnode",
-            "__metrics_path__": "/metrics"
-        },
-        "targets": [
-            "ssv.ssv-prater.dappnode:15000"
-        ]
+  {
+    "labels": {
+      "package": "ssv-holesky.dnp.dappnode.eth",
+      "service": "ssv.ssv-holesky.dappnode",
+      "__metrics_path__": "/metrics"
     },
-    {
-        "labels": {
-            "package": "ssv-prater.dnp.dappnode.eth",
-            "service": "ssv.ssv-prater.dappnode",
-            "__metrics_path__": "/health"
-        },
-        "targets": [
-            "ssv.ssv-prater.dappnode:15000"
-        ]
-    }
+    "targets": ["ssv.ssv-holesky.dappnode:15000"]
+  },
+  {
+    "labels": {
+      "package": "ssv-holesky.dnp.dappnode.eth",
+      "service": "ssv.ssv-holesky.dappnode",
+      "__metrics_path__": "/health"
+    },
+    "targets": ["ssv.ssv-holesky.dappnode:15000"]
+  }
 ]
