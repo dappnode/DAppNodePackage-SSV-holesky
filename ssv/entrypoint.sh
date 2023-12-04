@@ -58,7 +58,7 @@ fi
 # Create the DKG config file.
 yq e -i ".privKey = \"${PRIVATE_KEY_FILE}\"" "${DKG_CONFIG_PATH}"
 yq e -i ".privKeyPassword = \"${PRIVATE_KEY_PASSWORD_FILE}\"" "${DKG_CONFIG_PATH}"
-yq e -i ".port = strenv(DKG_PORT)" "${DKG_CONFIG_PATH}"
+yq e -i ".port = strenv(DKG_PORT) | tonumber " "${DKG_CONFIG_PATH}"
 yq e -i ".logLevel = strenv(LOG_LEVEL)" "${DKG_CONFIG_PATH}"
 
 # Create the node config file.
@@ -67,10 +67,10 @@ yq e -i ".global.LogFilePath = \"${NODE_LOG_FILE}\"" "${NODE_CONFIG_PATH}"
 yq e -i ".db.Path = \"${DB_PATH}\"" "${NODE_CONFIG_PATH}"
 yq e -i ".ssv.Network = strenv(NETWORK)" "${NODE_CONFIG_PATH}"
 yq e -i ".ssv.ValidatorOptions.BuilderProposals = (strenv(BUILDER_PROPOSALS) == \"true\")" "${NODE_CONFIG_PATH}"
-yq e -i ".eth2.BeaconNodeAddr = strenv(BEACON_NODE_API)" "${NODE_CONFIG_PATH}"
-yq e -i ".eth1.ETH1Addr = strenv(EXECUTION_LAYER_WS)" "${NODE_CONFIG_PATH}"
-yq e -i ".p2p.TCPPort = strenv(P2P_TCP_PORT)" "${NODE_CONFIG_PATH}"
-yq e -i ".p2p.UDPPort = strenv(P2P_UDP_PORT)" "${NODE_CONFIG_PATH}"
+yq e -i ".eth2.BeaconNodeAddr = \"${BEACON_NODE_API}\"" "${NODE_CONFIG_PATH}"
+yq e -i ".eth1.ETH1Addr = = \"${EXECUTION_LAYER_WS}\"" "${NODE_CONFIG_PATH}"
+yq e -i ".p2p.TCPPort = strenv(P2P_TCP_PORT) | tonumber" "${NODE_CONFIG_PATH}"
+yq e -i ".p2p.UDPPort = strenv(P2P_UDP_PORT) | tonumber" "${NODE_CONFIG_PATH}"
 yq e -i ".KeyStore.PrivateKeyFile = \"${PRIVATE_KEY_FILE}\"" "${NODE_CONFIG_PATH}"
 yq e -i ".KeyStore.PasswordFile = \"${PRIVATE_KEY_PASSWORD_FILE}\"" "${NODE_CONFIG_PATH}"
 
