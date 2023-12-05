@@ -68,7 +68,7 @@ yq e -i ".db.Path = \"${DB_PATH}\"" "${NODE_CONFIG_PATH}"
 yq e -i ".ssv.Network = strenv(NETWORK)" "${NODE_CONFIG_PATH}"
 yq e -i ".ssv.ValidatorOptions.BuilderProposals = (strenv(BUILDER_PROPOSALS) == \"true\")" "${NODE_CONFIG_PATH}"
 yq e -i ".eth2.BeaconNodeAddr = \"${BEACON_NODE_API}\"" "${NODE_CONFIG_PATH}"
-yq e -i ".eth1.ETH1Addr = = \"${EXECUTION_LAYER_WS}\"" "${NODE_CONFIG_PATH}"
+yq e -i ".eth1.ETH1Addr = \"${EXECUTION_LAYER_WS}\"" "${NODE_CONFIG_PATH}"
 yq e -i ".p2p.TCPPort = strenv(P2P_TCP_PORT)" "${NODE_CONFIG_PATH}"
 yq e -i ".p2p.UDPPort = strenv(P2P_UDP_PORT)" "${NODE_CONFIG_PATH}"
 yq e -i ".KeyStore.PrivateKeyFile = \"${PRIVATE_KEY_FILE}\"" "${NODE_CONFIG_PATH}"
@@ -76,4 +76,4 @@ yq e -i ".KeyStore.PasswordFile = \"${PRIVATE_KEY_PASSWORD_FILE}\"" "${NODE_CONF
 
 sleep infinity
 
-BUILD_PATH=/go/bin/ssvnode make start-node --config ${NODE_CONFIG_PATH}
+/go/bin/ssvnode start-node --config ${NODE_CONFIG_PATH}
