@@ -4,7 +4,7 @@ fields:
     target:
       type: environment
       name: BUILDER_PROPOSALS
-      service: ssv
+      service: operator
     title: Builder Proposals
     description: |-
       Whether to enable MEV block production. Requires the connected Beacon node to be MEV-enabled.

@@ -2,17 +2,17 @@
   {
     "labels": {
       "package": "ssv-holesky.dnp.dappnode.eth",
-      "service": "ssv.ssv-holesky.dappnode",
+      "service": "operator.ssv-holesky.dappnode",
       "__metrics_path__": "/metrics"
     },
-    "targets": ["ssv.ssv-holesky.dappnode:15000"]
+    "targets": ["operator.ssv-holesky.dappnode:15000"]
   },
   {
     "labels": {
       "package": "ssv-holesky.dnp.dappnode.eth",
-      "service": "ssv.ssv-holesky.dappnode",
+      "service": "operator.ssv-holesky.dappnode",
       "__metrics_path__": "/health"
     },
-    "targets": ["ssv.ssv-holesky.dappnode:15000"]
+    "targets": ["operator.ssv-holesky.dappnode:15000"]
   }
 ]

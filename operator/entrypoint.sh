@@ -1,15 +1,14 @@
 #!/bin/bash
 
-PRIVATE_KEY_FILE=${SSV_ROOT_DIR}/encrypted_private_key.json
-PRIVATE_KEY_PASSWORD_FILE=${SSV_ROOT_DIR}/private_key_password
+OPERATOR_DB_DIR=${OPERATOR_DATA_DIR}/db
+OPERATOR_LOGS_DIR=${OPERATOR_DATA_DIR}/logs
+OPERATOR_CONFIG_DIR=${OPERATOR_DATA_DIR}/config
+
+PRIVATE_KEY_FILE=${OPERATOR_CONFIG_DIR}/encrypted_private_key.json
+PRIVATE_KEY_PASSWORD_FILE=${OPERATOR_CONFIG_DIR}/private_key_password
 DEFAULT_PRIVATE_KEY_FILE=/encrypted_private_key.json
-
-NODE_CONFIG_PATH=/ssv-operator/node-config.yml
-DKG_CONFIG_PATH=/ssv-operator/dkg-config.yml
-
-DB_PATH=${DATA_PATH}/db
-DKG_LOG_FILE=${DATA_PATH}/dkg.log
-NODE_LOG_FILE=${DATA_PATH}/node.log
+NODE_CONFIG_FILE=${OPERATOR_CONFIG_DIR}/node-config.yml
+NODE_LOG_FILE=${OPERATOR_LOGS_DIR}/node.log
 
 # Assign proper value to _DAPPNODE_GLOBAL_EXECUTION_CLIENT_HOLESKY.
 case "$_DAPPNODE_GLOBAL_EXECUTION_CLIENT_HOLESKY" in
@@ -55,25 +54,17 @@ else
   echo "Operator keys already exist"
 fi
 
-# Create the DKG config file.
-yq e -i ".privKey = \"${PRIVATE_KEY_FILE}\"" "${DKG_CONFIG_PATH}"
-yq e -i ".privKeyPassword = \"${PRIVATE_KEY_PASSWORD_FILE}\"" "${DKG_CONFIG_PATH}"
-yq e -i ".port = strenv(DKG_PORT)" "${DKG_CONFIG_PATH}"
-yq e -i ".logLevel = strenv(LOG_LEVEL)" "${DKG_CONFIG_PATH}"
-
 # Create the node config file.
-yq e -i ".global.LogLevel = strenv(LOG_LEVEL)" "${NODE_CONFIG_PATH}"
-yq e -i ".global.LogFilePath = \"${NODE_LOG_FILE}\"" "${NODE_CONFIG_PATH}"
-yq e -i ".db.Path = \"${DB_PATH}\"" "${NODE_CONFIG_PATH}"
-yq e -i ".ssv.Network = strenv(NETWORK)" "${NODE_CONFIG_PATH}"
-yq e -i ".ssv.ValidatorOptions.BuilderProposals = (strenv(BUILDER_PROPOSALS) == \"true\")" "${NODE_CONFIG_PATH}"
-yq e -i ".eth2.BeaconNodeAddr = \"${BEACON_NODE_API}\"" "${NODE_CONFIG_PATH}"
-yq e -i ".eth1.ETH1Addr = \"${EXECUTION_LAYER_WS}\"" "${NODE_CONFIG_PATH}"
-yq e -i ".p2p.TCPPort = strenv(P2P_TCP_PORT)" "${NODE_CONFIG_PATH}"
-yq e -i ".p2p.UDPPort = strenv(P2P_UDP_PORT)" "${NODE_CONFIG_PATH}"
-yq e -i ".KeyStore.PrivateKeyFile = \"${PRIVATE_KEY_FILE}\"" "${NODE_CONFIG_PATH}"
-yq e -i ".KeyStore.PasswordFile = \"${PRIVATE_KEY_PASSWORD_FILE}\"" "${NODE_CONFIG_PATH}"
+yq e -i ".global.LogLevel = strenv(LOG_LEVEL)" "${NODE_CONFIG_FILE}"
+yq e -i ".global.LogFilePath = \"${NODE_LOG_FILE}\"" "${NODE_CONFIG_FILE}"
+yq e -i ".db.Path = \"${OPERATOR_DB_DIR}\"" "${NODE_CONFIG_FILE}"
+yq e -i ".ssv.Network = strenv(NETWORK)" "${NODE_CONFIG_FILE}"
+yq e -i ".ssv.ValidatorOptions.BuilderProposals = (strenv(BUILDER_PROPOSALS) == \"true\")" "${NODE_CONFIG_FILE}"
+yq e -i ".eth2.BeaconNodeAddr = \"${BEACON_NODE_API}\"" "${NODE_CONFIG_FILE}"
+yq e -i ".eth1.ETH1Addr = \"${EXECUTION_LAYER_WS}\"" "${NODE_CONFIG_FILE}"
+yq e -i ".p2p.TCPPort = strenv(P2P_TCP_PORT)" "${NODE_CONFIG_FILE}"
+yq e -i ".p2p.UDPPort = strenv(P2P_UDP_PORT)" "${NODE_CONFIG_FILE}"
+yq e -i ".KeyStore.PrivateKeyFile = \"${PRIVATE_KEY_FILE}\"" "${NODE_CONFIG_FILE}"
+yq e -i ".KeyStore.PasswordFile = \"${PRIVATE_KEY_PASSWORD_FILE}\"" "${NODE_CONFIG_FILE}"
 
-sleep infinity
-
-/go/bin/ssvnode start-node --config ${NODE_CONFIG_PATH}
+/go/bin/ssvnode start-node --config ${NODE_CONFIG_FILE} ${EXTRA_OPTS}

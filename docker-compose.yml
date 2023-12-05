@@ -1,23 +1,36 @@
 version: "3.5"
 services:
-  ssv:
+  operator:
     build:
-      context: ssv
+      context: operator
       args:
         UPSTREAM_VERSION: v1.2.0
     restart: unless-stopped
     volumes:
-      - "data:/data"
-      - "ssv-operator:/ssv-operator"
+      - "operator-data:/data/operator"
     ports:
       - "12515:12515/tcp"
       - "13515:13515/udp"
-      - "14515:14515"
     environment:
       BUILDER_PROPOSALS: "false"
       LOG_LEVEL: info
       EXTRA_OPTS: ""
-    image: "ssv.ssv-holesky.dnp.dappnode.eth:0.1.0"
+    image: "operator.ssv-holesky.dnp.dappnode.eth:0.1.0"
+  dkg:
+    build:
+      context: dkg
+      args:
+        UPSTREAM_VERSION: v1.0.1
+    restart: on-failure
+    volumes:
+      - "operator-data:/data/operator"
+      - "dkg-data:/data/dkg"
+    ports:
+      - "14515:14515"
+    environment:
+      LOG_LEVEL: info
+      EXTRA_OPTS: ""
+    image: "dkg.ssv-holesky.dnp.dappnode.eth:0.1.0"
 volumes:
-  data: {}
-  ssv-operator: {}
+  dkg-data: {}
+  operator-data: {}
