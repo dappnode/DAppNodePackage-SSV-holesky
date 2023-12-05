@@ -2,8 +2,8 @@ ARG UPSTREAM_VERSION
 
 FROM bloxstaking/ssv-node:${UPSTREAM_VERSION}
 
-RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community yq \
-    && apk add --no-cache openssl
+RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community yq\
+    && apk add --no-cache openssl jq curl
 
 COPY node-config.yml /data/operator/config/
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

@@ -54,6 +54,24 @@ else
   echo "Operator keys already exist"
 fi
 
+# Read JSON from PRIVATE_KEY_FILE and extract the publicKey
+PUBLIC_KEY=$(jq -r '.publicKey' ${PRIVATE_KEY_FILE})
+
+# Post ENR to dappmanager
+curl --connect-timeout 5 \
+  --max-time 10 \
+  --silent \
+  --retry 5 \
+  --retry-delay 0 \
+  --retry-max-time 40 \
+  -X POST "http://dappmanager.dappnode/data-send?key=NodePublicKey&data=${PUBLIC_KEY}" ||
+  {
+    echo -e "[ERROR] failed to post public key to dappmanager\n"
+    exit 1
+  }
+
+echo -e "\nPUBLIC_KEY=${PUBLIC_KEY}\n"
+
 # Create the node config file.
 yq e -i ".global.LogLevel = strenv(LOG_LEVEL)" "${NODE_CONFIG_FILE}"
 yq e -i ".global.LogFilePath = \"${NODE_LOG_FILE}\"" "${NODE_CONFIG_FILE}"
