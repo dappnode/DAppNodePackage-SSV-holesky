@@ -1,6 +1,6 @@
-ARG UPSTREAM_VERSION
+ARG DGK_UPSTREAM_VERSION
 
-FROM bloxstaking/ssv-dkg:${UPSTREAM_VERSION}
+FROM bloxstaking/ssv-dkg:${DGK_UPSTREAM_VERSION}
 
 RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community yq
 
