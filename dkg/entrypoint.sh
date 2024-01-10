@@ -3,10 +3,11 @@
 OPERATOR_CONFIG_DIR=${OPERATOR_DATA_DIR}/config
 DKG_CONFIG_DIR=${DKG_DATA_DIR}/config
 DKG_LOGS_DIR=${DKG_DATA_DIR}/logs
+DKG_OUTPUT_DIR=${DKG_DATA_DIR}/output
 
 PRIVATE_KEY_FILE=${OPERATOR_CONFIG_DIR}/encrypted_private_key.json
 PRIVATE_KEY_PASSWORD_FILE=${OPERATOR_CONFIG_DIR}/private_key_password
-DKG_CONFIG_FILE=${DKG_CONFIG_DIR}/dkg-config.yml
+DKG_CONFIG_FILE=${DKG_CONFIG_DIR}/config.yml
 DKG_LOG_FILE=${DKG_LOGS_DIR}/dkg.log
 
 # Wait for 10s to give the operator service time to create the private key and password files.
@@ -26,4 +27,4 @@ yq e -i ".privKeyPassword = \"${PRIVATE_KEY_PASSWORD_FILE}\"" "${DKG_CONFIG_FILE
 yq e -i ".port = strenv(DKG_PORT)" "${DKG_CONFIG_FILE}"
 yq e -i ".logLevel = strenv(LOG_LEVEL)" "${DKG_CONFIG_FILE}"
 
-exec /app start-operator --configPath ${DKG_CONFIG_FILE}
+exec /app start-operator --configPath ${DKG_CONFIG_DIR} --outputPath ${DKG_OUTPUT_DIR}
