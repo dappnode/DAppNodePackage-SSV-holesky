@@ -29,6 +29,7 @@ services:
       - "14515:14515"
     environment:
       LOG_LEVEL: info
+      OPERATOR_ID: ""
       EXTRA_OPTS: ""
     image: "dkg.ssv-holesky.dnp.dappnode.eth:0.1.0"
 volumes:

@@ -21,6 +21,12 @@ if [ ! -f "${PRIVATE_KEY_FILE}" ] || [ ! -f "${PRIVATE_KEY_PASSWORD_FILE}" ]; th
     exit 1
 fi
 
+# If operator ID is not defined in the environment, exit.
+if [ -z "${OPERATOR_ID}" ]; then
+    echo "OPERATOR_ID is not defined. You must set it in the package config to perform the DKG."
+    exit 1
+fi
+
 # Create the DKG config file.
 yq e -i ".privKey = \"${PRIVATE_KEY_FILE}\"" "${DKG_CONFIG_FILE}"
 yq e -i ".privKeyPassword = \"${PRIVATE_KEY_PASSWORD_FILE}\"" "${DKG_CONFIG_FILE}"
