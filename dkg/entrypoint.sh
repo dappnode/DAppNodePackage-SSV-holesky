@@ -43,8 +43,7 @@ fi
 
 exec /bin/ssv-dkg start-operator \
     --operatorID ${OPERATOR_ID} \
-    --DBPath ${DKG_DB_PATH} \
-    --configPath ${DKG_CONFIG_DIR} \
+    --configPath ${DKG_CONFIG_FILE} \
     --logFilePath ${DKG_LOG_FILE} \
     --logLevel ${LOG_LEVEL} \
     --operatorID ${OPERATOR_ID} \
