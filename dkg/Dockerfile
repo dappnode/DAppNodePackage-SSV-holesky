@@ -2,10 +2,10 @@ ARG DGK_UPSTREAM_VERSION
 
 FROM bloxstaking/ssv-dkg:${DGK_UPSTREAM_VERSION}
 
-RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community yq
+RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
+    yq inotify-tools
 
-# The file needs to be called config.yml
-COPY dkg-config.yml /data/dkg/config/config.yml
+COPY dkg-config.yml /data/dkg/config/dkg-config.yml
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENV DKG_PORT=14515 \
