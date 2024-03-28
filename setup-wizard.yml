@@ -12,3 +12,36 @@ fields:
       - "true"
       - "false"
     required: true
+  - id: setup_mode
+    title: Setup mode
+    description: |-
+      If you want to run a new operator, choose "New operator" option and continue with the installation. Otherwise, if you want to import an existing operator, choose "Import key" and fulfill the inputs below.
+    enum:
+      - "New Operator"
+      - "Import key"
+    target:
+      type: environment
+      name: SETUP_MODE
+    required: true
+  - id: encrypted-private-key
+    target:
+      type: fileUpload
+      path: /data/operator
+      service: operator
+    title: Encrypted private key
+    description: |
+      Provide here the encrypted private key in _JSON_ format.
+    pattern: "(\\.json)"
+    required: false
+    if: { "setup_mode": { "enum": ["Import key"] } }
+  - id: encrypted-private-key-pass
+    target:
+      type: enviroment
+      name: PUBLIC_KEY
+      service: operator
+    title: Encrypted private key
+    secret: true
+    description: |
+      Provide here the encrypted private key password.
+    required: false
+    if: { "setup_mode": { "enum": ["Import key"] } }
