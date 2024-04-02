@@ -28,11 +28,22 @@ if [ ! -f "${PRIVATE_KEY_PASSWORD_FILE}" ]; then
     exit 0
 fi
 
-# TODO: Fetch operator ID using the operator public key
 # If operator ID is not defined in the environment, exit.
 if [ -z "${OPERATOR_ID}" ]; then
-    echo "[ERROR] OPERATOR_ID is not defined. You must set it in the package config to perform the DKG."
-    exit 0
+
+    PUBLIC_KEY=$(jq -r '.publicKey' ${PRIVATE_KEY_FILE})
+
+    # Fetch the operator ID using the public key
+    RESPONSE=$(curl -s "https://api.ssv.network/api/v4/${NETWORK}/operators/public_key/${PUBLIC_KEY}")
+    OPERATOR_ID=$(echo "${RESPONSE}" | jq -r '.data.id')
+
+    # Check if OPERATOR_ID is successfully retrieved
+    if [ -z "${OPERATOR_ID}" ] || [ "${OPERATOR_ID}" = "null" ]; then
+        echo "[ERROR] Failed to fetch OPERATOR_ID from the API. Set OPERATOR_ID in the package config to perform the DKG."
+        exit 0
+    else
+        echo "[INFO] Successfully fetched OPERATOR_ID: ${OPERATOR_ID}"
+    fi
 fi
 
 exec /bin/ssv-dkg start-operator \
