@@ -3,14 +3,14 @@ fields:
   - id: setup-mode
     title: Setup mode
     description: |-
-      If this is the first install or just a common update, choose "New operator / Update" option and continue with the installation. If you want to import an existing operator, choose "Import key" and fulfill the inputs below.
+      If this is the first install or just a simple update, choose "New operator / Update" option and continue with the installation. If you want to import an existing operator, choose "Import key" and fulfill the inputs below.
     enum:
       - "New Operator / Update"
       - "Import Operator"
     target:
       type: environment
       name: SETUP_MODE
-    required: true
+    required: false
 
   - id: builder-proposals
     target:
