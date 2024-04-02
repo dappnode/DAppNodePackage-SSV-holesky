@@ -1,6 +1,18 @@
 version: "2"
 fields:
-  - id: BUILDER_PROPOSALS
+  - id: setup-mode
+    title: Setup mode
+    description: |-
+      If this is the first install or just a common update, choose "New operator / Update" option and continue with the installation. If you want to import an existing operator, choose "Import key" and fulfill the inputs below.
+    enum:
+      - "New Operator / Update"
+      - "Import Operator"
+    target:
+      type: environment
+      name: SETUP_MODE
+    required: true
+
+  - id: builder-proposals
     target:
       type: environment
       name: BUILDER_PROPOSALS
@@ -12,36 +24,28 @@ fields:
       - "true"
       - "false"
     required: true
-  - id: setup_mode
-    title: Setup mode
-    description: |-
-      If you want to run a new operator, choose "New operator" option and continue with the installation. Otherwise, if you want to import an existing operator, choose "Import key" and fulfill the inputs below.
-    enum:
-      - "New Operator"
-      - "Import key"
-    target:
-      type: environment
-      name: SETUP_MODE
-    required: true
+    default: "false"
+
   - id: encrypted-private-key
     target:
       type: fileUpload
-      path: /data/operator
+      path: /data/operator/config/encrypted_private_key.json
       service: operator
     title: Encrypted private key
     description: |
-      Provide here the encrypted private key in _JSON_ format.
-    pattern: "(\\.json)"
-    required: false
-    if: { "setup_mode": { "enum": ["Import key"] } }
+      Provide here the encrypted private key in JSON format.
+    pattern: "\\.json$"
+    required: true
+    if: { "setup-mode": { "enum": ["Import Operator"] } }
+
   - id: encrypted-private-key-pass
     target:
-      type: enviroment
-      name: PUBLIC_KEY
+      type: environment
+      name: PRIVATE_KEY_PASS
       service: operator
-    title: Encrypted private key
+    title: Encrypted private key password
     secret: true
     description: |
       Provide here the encrypted private key password.
-    required: false
-    if: { "setup_mode": { "enum": ["Import key"] } }
+    required: true
+    if: { "setup-mode": { "enum": ["Import Operator"] } }
