@@ -16,6 +16,8 @@ SSV is a network of validators that use a decentralized network of operators to 
 
 3. Register as an operator following the [SSV documentation](https://docs.ssv.network/operator-user-guides/operator-management/registration) with the public key obtained in step 2.
 
+4. If dkg has stopped and the Operator has already been registered, restart the package or add manually the Operator ID in the [SSV Config Tab](http://my.dappnode/packages/my/ssv-holesky.dnp.dappnode.eth/config.
+
 ## Troubleshoting
 
 - If the `OPERATOR_ID` is not automatically fetched in dkg service from SSV API, you can manually set it in the [SSV Config Tab](http://my.dappnode/packages/my/ssv-holesky.dnp.dappnode.eth/config).

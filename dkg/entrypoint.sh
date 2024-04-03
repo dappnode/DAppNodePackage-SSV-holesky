@@ -42,15 +42,35 @@ if [ -z "${OPERATOR_ID}" ]; then
 
         # Fetch the operator ID using the public key
         RESPONSE=$(curl -s "https://api.ssv.network/api/v4/${NETWORK}/operators/public_key/${PUBLIC_KEY}")
-        OPERATOR_ID=$(echo "${RESPONSE}" | jq -r '.data.id')
 
-        # Check if OPERATOR_ID is successfully retrieved
-        if [ -z "${OPERATOR_ID}" ] || [ "${OPERATOR_ID}" = "null" ]; then
-            echo "[ERROR] Failed to fetch OPERATOR_ID from the API. Set OPERATOR_ID in the package config to perform the DKG."
+        # Check if RESPONSE is successfully retrieved
+        if [[ "${RESPONSE}" == *'"error"'* ]]; then
+            echo "[ERROR] Failed to fetch the API. Set OPERATOR_ID manually in the package config to perform the DKG."
             exit 0
         else
-            echo "[INFO] Successfully fetched OPERATOR_ID: ${OPERATOR_ID}"
-            echo "${OPERATOR_ID}" >${OPERATOR_ID_FILE}
+            OPERATOR_ID=$(echo "${RESPONSE}" | jq -r '.data.id')
+
+            # Check if OPERATOR_ID is successfully retrieved
+            if [ -z "${OPERATOR_ID}" ] || [ "${OPERATOR_ID}" = "null" ]; then
+
+                # Fetching Operator ID AGAIN
+                echo "[ERROR] Failed to fetch OPERATOR_ID from the API. Trying again in 5 minutes."
+                RESPONSE=$(curl --connect-timeout 5 \
+                    --silent \
+                    --retry 1 \
+                    --retry-delay 300 "https://api.ssv.network/api/v4/${NETWORK}/operators/public_key/${PUBLIC_KEY}")
+
+                OPERATOR_ID=$(echo "${RESPONSE}" | jq -r '.data.id')
+
+                # Check if OPERATOR_ID is successfully retrieved AGAIN
+                if [ -z "${OPERATOR_ID}" ] || [ "${OPERATOR_ID}" = "null" ]; then
+                    echo "[ERROR] Failed to fetch the OPERATOR_ID from the API. Add it manually in the package config or restart the package to perform the DKG."
+                    exit 1
+                else
+                    echo "[INFO] Successfully fetched OPERATOR_ID: ${OPERATOR_ID}"
+                    echo "${OPERATOR_ID}" >${OPERATOR_ID_FILE}
+                fi
+            fi
         fi
     fi
 else
