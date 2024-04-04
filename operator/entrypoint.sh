@@ -6,6 +6,7 @@ OPERATOR_CONFIG_DIR=${OPERATOR_DATA_DIR}/config
 
 PRIVATE_KEY_FILE=${OPERATOR_CONFIG_DIR}/encrypted_private_key.json
 PRIVATE_KEY_PASSWORD_FILE=${OPERATOR_CONFIG_DIR}/private_key_password
+OLD_PRIVATE_KEY_PASSWORD_FILE=${OPERATOR_CONFIG_DIR}/old_private_key_password
 DEFAULT_PRIVATE_KEY_FILE=/encrypted_private_key.json
 NODE_CONFIG_FILE=${OPERATOR_CONFIG_DIR}/node-config.yml
 NODE_LOG_FILE=${OPERATOR_LOGS_DIR}/node.log
@@ -37,19 +38,29 @@ esac
 
 if [ ! -f "${PRIVATE_KEY_FILE}" ]; then
 
-  # If the private keys in the default location, move it to the proper location.
-  if [ ! -f "${DEFAULT_PRIVATE_KEY_FILE}" ]; then
+  # Check if pass was given during the installation
+  if [ -n "${PRIVATE_KEY_PASS}" ]; then
 
-    echo "Generating a random password for the operator keys..."
-    openssl rand -base64 12 >${PRIVATE_KEY_PASSWORD_FILE}
+    # Storing old pass if existed
+    if [ -f "${PRIVATE_KEY_PASSWORD_FILE}"]; then
+      echo "${PRIVATE_KEY_PASSWORD_FILE}" >${OLD_PRIVATE_KEY_PASSWORD_FILE}
+    fi
+    echo "${PRIVATE_KEY_PASS}" >${PRIVATE_KEY_PASSWORD_FILE}
+  else
 
-    echo "Generating operator keys..."
-    /go/bin/ssvnode generate-operator-keys --password-file ${PRIVATE_KEY_PASSWORD_FILE}
+    # If the private keys in the default location, move it to the proper location.
+    if [ ! -f "${DEFAULT_PRIVATE_KEY_FILE}" ]; then
+
+      echo "Generating a random password for the operator keys..."
+      openssl rand -base64 12 >${PRIVATE_KEY_PASSWORD_FILE}
+
+      echo "Generating operator keys..."
+      /go/bin/ssvnode generate-operator-keys --password-file ${PRIVATE_KEY_PASSWORD_FILE}
+    fi
+
+    echo "Moving private key to the proper location..."
+    mv ${DEFAULT_PRIVATE_KEY_FILE} ${PRIVATE_KEY_FILE}
   fi
-
-  echo "Moving private key to the proper location..."
-  mv ${DEFAULT_PRIVATE_KEY_FILE} ${PRIVATE_KEY_FILE}
-
 else
   echo "Operator keys already exist"
 fi
