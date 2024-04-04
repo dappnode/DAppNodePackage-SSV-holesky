@@ -40,13 +40,15 @@ if [ -z "${OPERATOR_ID}" ]; then
 
         PUBLIC_KEY=$(jq -r '.publicKey' ${PRIVATE_KEY_FILE})
 
-        # Fetch the operator ID using the public key
-        RESPONSE=$(curl -s "https://api.ssv.network/api/v4/${NETWORK}/operators/public_key/${PUBLIC_KEY}")
+        # Fetch the operator ID using the public key (retry 50 times with a delay of 10mins)
+        RESPONSE=$(curl --retry 50 --retry-delay 600 "https://api.ssv.network/api/v4/${NETWORK}/operators/public_key/${PUBLIC_KEY}")
+
         OPERATOR_ID=$(echo "${RESPONSE}" | jq -r '.data.id')
 
         # Check if OPERATOR_ID is successfully retrieved
         if [ -z "${OPERATOR_ID}" ] || [ "${OPERATOR_ID}" = "null" ]; then
-            echo "[ERROR] Failed to fetch OPERATOR_ID from the API. Set OPERATOR_ID in the package config to perform the DKG."
+            echo "[ERROR] Failed to fetch OPERATOR_ID from the API. Is your operator registered on the SSV network?"
+            echo "[INFO] Once registered, set OPERATOR_ID in the package config to perform the DKG or restart the dkg service to retry fetching it from the SSV API."
             exit 0
         else
             echo "[INFO] Successfully fetched OPERATOR_ID: ${OPERATOR_ID}"
