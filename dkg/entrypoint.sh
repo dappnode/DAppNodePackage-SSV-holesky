@@ -70,6 +70,10 @@ if [ -z "${OPERATOR_ID}" ]; then
                     echo "[INFO] Successfully fetched OPERATOR_ID: ${OPERATOR_ID}"
                     echo "${OPERATOR_ID}" >${OPERATOR_ID_FILE}
                 fi
+
+            else
+                echo "[INFO] Successfully fetched OPERATOR_ID: ${OPERATOR_ID}"
+                echo "${OPERATOR_ID}" >${OPERATOR_ID_FILE}
             fi
         fi
     fi
