@@ -23,16 +23,9 @@ done
 
 echo "[INFO] Private key file found."
 
-# Immediately check for the password file;
 if [ ! -f "${PRIVATE_KEY_PASSWORD_FILE}" ]; then
-
-    # Checks if pass was given during the installation. Logs an error and exit with status 0 if not found.
-    if [ -n "${PRIVATE_KEY_PASS}" ]; then
-        echo "${PRIVATE_KEY_PASS}" >${PRIVATE_KEY_PASSWORD_FILE}
-    else
-        echo "[ERROR] ${PRIVATE_KEY_PASSWORD_FILE} not found. Cannot continue without the private key password."
-        exit 0
-    fi
+    echo "[ERROR] ${PRIVATE_KEY_PASSWORD_FILE} not found. Cannot continue without the private key password file."
+    exit 0 # To avoid restart loop
 fi
 
 if [ -z "${OPERATOR_ID}" ]; then
