@@ -36,6 +36,40 @@ case "$_DAPPNODE_GLOBAL_CONSENSUS_CLIENT_HOLESKY" in
   ;;
 esac
 
+# Check if the private key pass file exists
+if [ -f "${PRIVATE_KEY_PASSWORD_FILE}" ]; then
+  STORED_PRIVATE_KEY_PASS=$(cat ${PRIVATE_KEY_PASSWORD_FILE})
+
+  # Check if PRIVATE_KEY_PASS is set and if it is different from the stored pass
+  if [ -n "${PRIVATE_KEY_PASS}" ] && [ "${PRIVATE_KEY_PASS}" != "${STORED_PRIVATE_KEY_PASS}" ]; then
+    echo "The private key password has changed. Updating it..."
+    mv ${PRIVATE_KEY_FILE} ${PRIVATE_KEY_FILE}.old
+    echo "${PRIVATE_KEY_PASS}" >${PRIVATE_KEY_PASSWORD_FILE}
+  fi
+elif [ -n "${PRIVATE_KEY_PASS}" ]; then
+  echo "Storing the private key password..."
+  echo "${PRIVATE_KEY_PASS}" >${PRIVATE_KEY_PASSWORD_FILE}
+else
+  echo "Generating a random password for the operator keys..."
+  openssl rand -base64 12 >${PRIVATE_KEY_PASSWORD_FILE}
+fi
+
+if [ ! -f "${PRIVATE_KEY_FILE}" ]; then
+
+  # If the private keys in the default location, move it to the proper location.
+  if [ ! -f "${DEFAULT_PRIVATE_KEY_FILE}" ]; then
+
+    echo "Generating operator keys..."
+    /go/bin/ssvnode generate-operator-keys --password-file ${PRIVATE_KEY_PASSWORD_FILE}
+  fi
+
+  echo "Moving private key to the proper location..."
+  mv ${DEFAULT_PRIVATE_KEY_FILE} ${PRIVATE_KEY_FILE}
+
+else
+  echo "Operator keys already exist"
+fi
+
 if [ ! -f "${PRIVATE_KEY_FILE}" ]; then
 
   # Check if pass was given during the installation

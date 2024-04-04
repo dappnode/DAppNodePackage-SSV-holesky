@@ -15,6 +15,7 @@ services:
       BUILDER_PROPOSALS: "false"
       LOG_LEVEL: info
       EXTRA_OPTS: ""
+      PRIVATE_KEY_PASS: ""
     image: "operator.ssv-holesky.dnp.dappnode.eth:0.1.0"
   dkg:
     build:
