@@ -34,7 +34,7 @@ fields:
     title: Encrypted private key
     description: |
       Provide here the encrypted private key in JSON format.
-    pattern: "\\.json$"
+    pattern: "\\.json"
     required: true
     if: { "setup-mode": { "enum": ["Import Operator"] } }
 
