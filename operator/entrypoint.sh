@@ -2,16 +2,21 @@
 
 export OPERATOR_DB_DIR=${OPERATOR_DATA_DIR}/db
 export OPERATOR_CONFIG_DIR=${OPERATOR_DATA_DIR}/config
+export OPERATOR_LOGS_DIR=${OPERATOR_DATA_DIR}/logs
 
 export PRIVATE_KEY_FILE=${OPERATOR_CONFIG_DIR}/encrypted_private_key.json
 export PRIVATE_KEY_PASSWORD_FILE=${OPERATOR_CONFIG_DIR}/private_key_password
 export NODE_CONFIG_FILE=${NODE_CONFIG_DIR}/node-config.yml
-export NODE_LOG_FILE=${OPERATOR_DATA_DIR}/logs/node.log
+export NODE_LOG_FILE=${OPERATOR_LOGS_DIR}/node.log
 
 # Temporary files
 OLD_PRIVATE_KEY_PASSWORD_FILE=${OPERATOR_CONFIG_DIR}/old_private_key_password
 DEFAULT_PRIVATE_KEY_FILE=/encrypted_private_key.json
 RAW_NODE_YML_CONFIG_FILE=${NODE_CONFIG_DIR}/raw-node-config.yml
+
+create_directories() {
+  mkdir -p ${OPERATOR_CONFIG_DIR} ${OPERATOR_DB_DIR} ${OPERATOR_LOGS_DIR}
+}
 
 assign_execution_endpoint() {
   case "$_DAPPNODE_GLOBAL_EXECUTION_CLIENT_HOLESKY" in
@@ -93,7 +98,7 @@ handle_private_key() {
 }
 
 post_pubkey_to_dappmanager() {
-  PUBLIC_KEY=$(jq -r '.publicKey' ${PRIVATE_KEY_FILE})
+  PUBLIC_KEY=$(jq -r '.pubKey' ${PRIVATE_KEY_FILE})
 
   curl --connect-timeout 5 \
     --max-time 10 \
@@ -143,6 +148,7 @@ start_operator() {
 }
 
 main() {
+  create_directories
   assign_execution_endpoint
   assign_beacon_endpoint
   handle_password
