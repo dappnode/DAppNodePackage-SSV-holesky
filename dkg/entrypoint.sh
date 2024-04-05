@@ -49,7 +49,7 @@ get_operator_id() {
 fetch_operator_id_from_api() {
     echo "[INFO] OPERATOR_ID not provided. Fetching OPERATOR_ID from the API..."
 
-    PUBLIC_KEY=$(jq -r '.publicKey' ${PRIVATE_KEY_FILE})
+    PUBLIC_KEY=$(jq -r '.pubKey' ${PRIVATE_KEY_FILE})
 
     # Fetch the operator ID using the public key (retry 50 times with a delay of 10mins)
     RESPONSE=$(curl --retry 50 --retry-delay 600 "https://api.ssv.network/api/v4/${NETWORK}/operators/public_key/${PUBLIC_KEY}")
