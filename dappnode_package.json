@@ -45,6 +45,11 @@
       "name": "operator-config",
       "path": "/data/operator/config",
       "service": "operator"
+    },
+    {
+      "name": "dkg-output",
+      "path": "/data/dkg/output",
+      "service": "dkg"
     }
   ]
 }

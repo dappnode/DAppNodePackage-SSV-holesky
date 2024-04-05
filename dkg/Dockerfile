@@ -5,13 +5,14 @@ FROM bloxstaking/ssv-dkg:${DGK_UPSTREAM_VERSION}
 RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
     yq inotify-tools jq curl
 
-COPY dkg-config.yml /data/dkg/config/dkg-config.yml
+COPY dkg-config.yml /ssv-dkg/config/dkg-config.yml
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENV DKG_PORT=14515 \
     DKG_DATA_DIR=/data/dkg \
     OPERATOR_DATA_DIR=/data/operator \
     NETWORK=holesky \
-    METRICS_PORT=15000
+    METRICS_PORT=15000 \
+    DKG_CONFIG_DIR=/ssv-dkg/config
 
 ENTRYPOINT [ "entrypoint.sh" ]
