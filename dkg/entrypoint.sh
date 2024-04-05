@@ -60,6 +60,7 @@ fetch_operator_id_from_api() {
     if [ -z "${OPERATOR_ID}" ] || [ "${OPERATOR_ID}" = "null" ]; then
         echo "[ERROR] Failed to fetch OPERATOR_ID from the API. Is your operator registered on the SSV network?"
         echo "[INFO] Once registered, set OPERATOR_ID in the package config to perform the DKG or restart the dkg service to retry fetching it from the SSV API."
+        sleep 10m # To allow restoring backup
         exit 0
     else
         echo "[INFO] Successfully fetched OPERATOR_ID: ${OPERATOR_ID}"

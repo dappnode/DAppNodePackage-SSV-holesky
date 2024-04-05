@@ -6,7 +6,8 @@ FROM bloxstaking/ssv-node:${UPSTREAM_VERSION}
 RUN apt-get update && \
     apt-get install -y curl jq ruby openssl && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /data/operator/config
 
 COPY node-config.yml /ssv-node/config/raw-node-config.yml
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
