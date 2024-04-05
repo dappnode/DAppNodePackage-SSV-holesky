@@ -2,15 +2,19 @@ ARG UPSTREAM_VERSION
 
 FROM bloxstaking/ssv-node:${UPSTREAM_VERSION}
 
-RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community yq\
-    && apk add --no-cache openssl jq curl
+# Use apt
+RUN apt-get update && \
+    apt-get install -y curl jq ruby openssl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY node-config.yml /data/operator/config/
+COPY node-config.yml /ssv-node/config/raw-node-config.yml
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENV P2P_TCP_PORT=12515 \ 
     P2P_UDP_PORT=13515 \
     OPERATOR_DATA_DIR=/data/operator \
+    NODE_CONFIG_DIR=/ssv-node/config \
     NETWORK=holesky \
     METRICS_PORT=15000 
 
