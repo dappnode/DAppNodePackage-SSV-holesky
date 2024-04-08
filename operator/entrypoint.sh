@@ -141,11 +141,6 @@ create_operator_config() {
   rm -f "${raw_json_config_file}" "${modified_json_config_file}"
 }
 
-store_pk_to_file() {
-  echo "[INFO] Storing the public key to the DB dir..."
-  echo $PUBLIC_KEY >${OPERATOR_DB_DIR}/pubkey.txt
-}
-
 start_operator() {
   echo "[INFO] Starting SSV operator..."
 
