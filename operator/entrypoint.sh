@@ -143,7 +143,21 @@ create_operator_config() {
 
 start_operator() {
   echo "[INFO] Starting SSV operator..."
-  exec /go/bin/ssvnode start-node --config ${NODE_CONFIG_FILE} ${EXTRA_OPTS}
+
+  /go/bin/ssvnode start-node --config ${NODE_CONFIG_FILE} ${EXTRA_OPTS} &
+
+  wait $!
+  EXIT_STATUS=$?
+
+  # Backup restoring causes the operator to find a mismatch in the DB
+  if [ $EXIT_STATUS -ne 0 ] && grep -q "operator private key is not matching the one encrypted the storage" ${NODE_LOG_FILE}; then
+    echo "[WARN] Detected private key mismatch, probably due to backup restoring. Removing DB and retrying..."
+    rm -rf ${OPERATOR_DB_DIR}/*
+
+    exec /go/bin/ssvnode start-node --config ${NODE_CONFIG_FILE} ${EXTRA_OPTS}
+  else
+    exit $EXIT_STATUS
+  fi
 }
 
 main() {
