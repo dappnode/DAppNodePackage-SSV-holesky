@@ -141,11 +141,15 @@ create_operator_config() {
   rm -f "${raw_json_config_file}" "${modified_json_config_file}"
 }
 
+store_pk_to_file() {
+  echo "[INFO] Storing the public key to the DB dir..."
+  echo $PUBLIC_KEY >${OPERATOR_DB_DIR}/pubkey.txt
+}
+
 ensure_db_matches_key() {
   # If there is no pubkey.txt file in the DB dir, create it
   if [ ! -f "${OPERATOR_DB_DIR}/pubkey.txt" ]; then
-    echo "[INFO] Creating pubkey.txt file in the DB dir..."
-    echo $PUBLIC_KEY >${OPERATOR_DB_DIR}/pubkey.txt
+    store_pk_to_file
     return
   fi
 
@@ -153,6 +157,7 @@ ensure_db_matches_key() {
   if [ "$(cat ${OPERATOR_DB_DIR}/pubkey.txt)" != "${PUBLIC_KEY}" ]; then
     echo "[INFO] Detected pubkey mismatch. Removing DB dir..."
     rm -rf ${OPERATOR_DB_DIR}/*
+    store_pk_to_file
     return
   fi
 
