@@ -146,28 +146,23 @@ store_pk_to_file() {
   echo $PUBLIC_KEY >${OPERATOR_DB_DIR}/pubkey.txt
 }
 
-ensure_db_matches_key() {
-  # If there is no pubkey.txt file in the DB dir, create it
-  if [ ! -f "${OPERATOR_DB_DIR}/pubkey.txt" ]; then
-    store_pk_to_file
-    return
-  fi
-
-  # If the pubkey in the DB dir does not match the current pubkey, remove the DB dir
-  if [ "$(cat ${OPERATOR_DB_DIR}/pubkey.txt)" != "${PUBLIC_KEY}" ]; then
-    echo "[INFO] Detected pubkey mismatch. Removing DB dir..."
-    rm -rf ${OPERATOR_DB_DIR}/*
-    store_pk_to_file
-    return
-  fi
-
-  echo "[INFO] Pubkey in the DB dir matches the current pubkey."
-
-}
-
 start_operator() {
   echo "[INFO] Starting SSV operator..."
-  exec /go/bin/ssvnode start-node --config ${NODE_CONFIG_FILE} ${EXTRA_OPTS}
+
+  /go/bin/ssvnode start-node --config ${NODE_CONFIG_FILE} ${EXTRA_OPTS} &
+
+  wait $!
+  EXIT_STATUS=$?
+
+  # Backup restoring causes the operator to find a mismatch in the DB
+  if [ $EXIT_STATUS -ne 0 ] && grep -q "operator private key is not matching the one encrypted the storage" ${NODE_LOG_FILE}; then
+    echo "[WARN] Detected private key mismatch, probably due to backup restoring. Removing DB and retrying..."
+    rm -rf ${OPERATOR_DB_DIR}/*
+
+    exec /go/bin/ssvnode start-node --config ${NODE_CONFIG_FILE} ${EXTRA_OPTS}
+  else
+    exit $EXIT_STATUS
+  fi
 }
 
 main() {
@@ -178,7 +173,6 @@ main() {
   handle_private_key
   post_pubkey_to_dappmanager
   create_operator_config
-  ensure_db_matches_key
   start_operator
 }
 
