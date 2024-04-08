@@ -25,8 +25,8 @@ wait_for_private_key() {
     echo "[INFO] Private key file found."
 
     if [ ! -f "${PRIVATE_KEY_PASSWORD_FILE}" ]; then
-        echo "[ERROR] ${PRIVATE_KEY_PASSWORD_FILE} not found. Cannot continue without the private key password file."
-        exit 0 # To avoid restart loop
+        echo "[ERROR] ${PRIVATE_KEY_PASSWORD_FILE} not found. Cannot continue without the private key password file. Restarting dkg service..."
+        exit 1 # To avoid restart loop
     fi
 }
 
