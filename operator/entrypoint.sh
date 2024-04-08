@@ -10,7 +10,6 @@ export NODE_CONFIG_FILE=${NODE_CONFIG_DIR}/node-config.yml
 export NODE_LOG_FILE=${OPERATOR_LOGS_DIR}/node.log
 
 # Temporary files
-OLD_PRIVATE_KEY_PASSWORD_FILE=${OPERATOR_CONFIG_DIR}/old_private_key_password
 DEFAULT_PRIVATE_KEY_FILE=/encrypted_private_key.json
 RAW_NODE_YML_CONFIG_FILE=${NODE_CONFIG_DIR}/raw-node-config.yml
 
