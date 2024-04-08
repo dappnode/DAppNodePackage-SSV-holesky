@@ -141,6 +141,25 @@ create_operator_config() {
   rm -f "${raw_json_config_file}" "${modified_json_config_file}"
 }
 
+ensure_db_matches_key() {
+  # If there is no pubkey.txt file in the DB dir, create it
+  if [ ! -f "${OPERATOR_DB_DIR}/pubkey.txt" ]; then
+    echo "[INFO] Creating pubkey.txt file in the DB dir..."
+    PUBLIC_KEY >${OPERATOR_DB_DIR}/pubkey.txt
+    return
+  fi
+
+  # If the pubkey in the DB dir does not match the current pubkey, remove the DB dir
+  if [ "$(cat ${OPERATOR_DB_DIR}/pubkey.txt)" != "${PUBLIC_KEY}" ]; then
+    echo "[INFO] Detected pubkey mismatch. Removing DB dir..."
+    rm -rf ${OPERATOR_DB_DIR}/*
+    return
+  fi
+
+  echo "[INFO] Pubkey in the DB dir matches the current pubkey."
+
+}
+
 start_operator() {
   echo "[INFO] Starting SSV operator..."
   exec /go/bin/ssvnode start-node --config ${NODE_CONFIG_FILE} ${EXTRA_OPTS}
@@ -154,6 +173,7 @@ main() {
   handle_private_key
   post_pubkey_to_dappmanager
   create_operator_config
+  ensure_db_matches_key
   start_operator
 }
 
