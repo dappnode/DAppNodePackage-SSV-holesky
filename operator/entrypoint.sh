@@ -145,7 +145,7 @@ ensure_db_matches_key() {
   # If there is no pubkey.txt file in the DB dir, create it
   if [ ! -f "${OPERATOR_DB_DIR}/pubkey.txt" ]; then
     echo "[INFO] Creating pubkey.txt file in the DB dir..."
-    PUBLIC_KEY >${OPERATOR_DB_DIR}/pubkey.txt
+    echo $PUBLIC_KEY >${OPERATOR_DB_DIR}/pubkey.txt
     return
   fi
 
