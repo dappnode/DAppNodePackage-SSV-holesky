@@ -10,6 +10,7 @@ fields:
     target:
       type: environment
       name: SETUP_MODE
+      service: operator
     required: false
 
   - id: builder-proposals
