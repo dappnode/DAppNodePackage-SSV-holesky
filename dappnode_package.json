@@ -3,12 +3,12 @@
   "version": "0.1.3",
   "upstream":[
     {
-      "repo": "bloxapp/ssv",
+      "repo": "ssvlabs/ssv",
       "version": "v1.3.4",
       "arg": "OPERATOR_UPSTREAM_VERSION"
     },
     {
-      "repo": "ssv-dkg",
+      "repo": "ssvlabs/ssv-dkg",
       "version": "v2.1.0",
       "arg": "DKG_UPSTREAM_VERSION"
     }
