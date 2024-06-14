@@ -4,19 +4,19 @@ services:
     build:
       context: operator
       args:
-        UPSTREAM_VERSION: v1.3.3
+        UPSTREAM_VERSION: v1.3.4
     restart: unless-stopped
     volumes:
-      - "operator-data:/data/operator"
+      - operator-data:/data/operator
     ports:
-      - "12515:12515/tcp"
-      - "13515:13515/udp"
+      - 12515:12515/tcp
+      - 13515:13515/udp
     environment:
       BUILDER_PROPOSALS: "false"
       LOG_LEVEL: info
       EXTRA_OPTS: ""
       PRIVATE_KEY_PASS: ""
-    image: "operator.ssv-holesky.dnp.dappnode.eth:0.1.0"
+    image: operator.ssv-holesky.dnp.dappnode.eth:0.1.0
   dkg:
     build:
       context: dkg
@@ -24,15 +24,15 @@ services:
         DGK_UPSTREAM_VERSION: v2.0.0
     restart: on-failure
     volumes:
-      - "operator-data:/data/operator"
-      - "dkg-data:/data/dkg"
+      - operator-data:/data/operator
+      - dkg-data:/data/dkg
     ports:
       - "14515:14515"
     environment:
       LOG_LEVEL: info
       OPERATOR_ID: ""
       EXTRA_OPTS: ""
-    image: "dkg.ssv-holesky.dnp.dappnode.eth:0.1.0"
+    image: dkg.ssv-holesky.dnp.dappnode.eth:0.1.0
 volumes:
   dkg-data: {}
   operator-data: {}
