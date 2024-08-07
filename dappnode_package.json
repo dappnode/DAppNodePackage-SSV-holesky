@@ -1,10 +1,10 @@
 {
   "name": "ssv-holesky.dnp.dappnode.eth",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "upstream": [
     {
       "repo": "ssvlabs/ssv",
-      "version": "v1.3.7",
+      "version": "v1.3.8",
       "arg": "OPERATOR_UPSTREAM_VERSION"
     },
     {
